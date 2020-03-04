@@ -23,4 +23,4 @@ jobs:
           release_name: ${{ env.GIT_TAG }}
           draft: false
           prerelease: false
-          body: ${{ steps.prepare_for_release.outputs.body }}
+          body: "${{ steps.prepare_for_release.outputs.body }}"
