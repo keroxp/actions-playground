@@ -9,15 +9,7 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - uses: keroxp/actions-github-ref@v1.0.0
-      - name: Prepare for release
-        id: prepare_for_release
-        env:
-          NEXT: ${{ env.GIT_TAG }}
-        run: |
-          CURR=$(git tag | grep "^[0-9]\+\.[0-9]\+\.[0-9]\+$" | sort -V | tail -n 2 | head -n 1)
-          BODY=$(git log ${NEXT}...${CURR} --oneline)
-          echo "::set-output name=body::${BODY}"
-      - uses: actions/create-release@v1
+      - uses: loilo-inc/actions-release@v0.1.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -25,5 +17,3 @@ jobs:
           release_name: ${{ env.GIT_TAG }}
           draft: false
           prerelease: false
-          body: |
-            ${{ steps.prepare_for_release.outputs.body }}
