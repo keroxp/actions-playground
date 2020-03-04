@@ -1,0 +1,27 @@
+name: tag_body
+on:
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: keroxp/actions-github-ref@v1.0.0
+      - name: Prepare for release
+        id: prepare_for_release
+        env:
+          NEXT: ${{ env.GIT_TAG }}
+        run: |
+          PREV=$(git tag | grep "^[0-9]\+\.[0-9]\+\.[0-9]\+$" | sort -V | tail -n 1)
+          BODY=$(git log ${PREV}...head --online)
+          echo "::set-output name=body::${BODY}"
+            #リリースを作る
+      - uses: actions/create-release@v1
+        with:
+          tag_name: ${{ env.GIT_TAG }}
+          release_name: ${{ env.GIT_TAG }}
+          draft: false
+          prerelease: false
+          body: ${{ steps.prepare_for_release.outputs.body }}
