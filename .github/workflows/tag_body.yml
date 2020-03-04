@@ -14,10 +14,9 @@ jobs:
         env:
           NEXT: ${{ env.GIT_TAG }}
         run: |
-          PREV=$(git tag | grep "^[0-9]\+\.[0-9]\+\.[0-9]\+$" | sort -V | tail -n 1)
-          BODY=$(git log ${PREV}...head --online)
+          CURR=$(git tag | grep "^[0-9]\+\.[0-9]\+\.[0-9]\+$" | sort -V | tail -n 1)
+          BODY=$(git log ${NEXT}...${CURR} --online)
           echo "::set-output name=body::${BODY}"
-            #リリースを作る
       - uses: actions/create-release@v1
         with:
           tag_name: ${{ env.GIT_TAG }}
