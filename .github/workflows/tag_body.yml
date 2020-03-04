@@ -18,6 +18,8 @@ jobs:
           BODY=$(git log ${NEXT}...${CURR} --oneline)
           echo "::set-output name=body::${BODY}"
       - uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ env.GIT_TAG }}
           release_name: ${{ env.GIT_TAG }}
